@@ -1,0 +1,62 @@
+# version: 0.3.0
+# deploy-config.template.yaml — puente blueprint -> memsys3
+#
+# Propósito: alimentar el deploy de memsys3 con datos que YA decidiste en el
+# blueprint, en vez de re-contestarlos en el briefing conversacional. Evita que
+# `project-status.yaml` nazca divergiendo de `docs/blueprint/` el día 1.
+#
+# Uso:
+#   1. Cierra docs/blueprint/VisionScope.md y docs/blueprint/PRD.md.
+#   2. Copia este archivo a la RAÍZ del proyecto como `deploy-config.yaml`.
+#   3. Rellena cada campo desde la sección del blueprint indicada en su comentario.
+#   4. Ejecuta el deploy de memsys3 siguiendo su propio prompt de instalación.
+#      El Setup Agent detecta el archivo en su Paso 3 y entra en modo
+#      declarativo, sin briefing.
+#   5. Tras el deploy ya no se vuelve a leer. No lo añadas al historial: la
+#      fase de limpieza lo borra junto con el resto del andamiaje.
+#
+# Si dejas campos críticos vacíos, el Setup Agent completa solo esos huecos
+# preguntándote. No pasa nada por rellenar parcialmente.
+#
+# Schema fuente: memsys3/memory/templates/deploy-config-template.yaml
+# Schema agnóstico: solo naturaleza del proyecto. El stack técnico (framework,
+# lenguaje, plataforma de deploy) es irrelevante para memsys3 y NO se pregunta.
+
+proyecto:
+  nombre: ""                # <- título de docs/blueprint/VisionScope.md ("VisionScope — NOMBRE")
+  dominio: ""               # <- VisionScope §Problema y oportunidad: área/sector en pocas palabras
+  objetivo: ""              # <- VisionScope §Vision, reducida a 1-2 frases
+  audiencia: ""             # <- VisionScope §Actores principales: quién usa u opera el proyecto
+  fase: ""                  # <- VisionScope §Estado y contexto actual. Valores: Planificación / MVP / Beta / Producción
+  idioma: ""                # Idioma de documentación, memoria y trato con el usuario (ej: "español")
+
+# Decisiones de deploy (opt-in/out explícitos, no salen del blueprint).
+# Se preguntan por el nombre de la clave y con su recomendación.
+
+# ¿Excluir `memsys3/` de git? Recomendado `false`, es decir, NO excluirla.
+# Motivo: versionar la memoria del proyecto la protege contra la pérdida de
+# contexto y la deja disponible para cualquiera que clone el repositorio.
+# Ponlo a `true` solo si tienes un motivo explícito para que la memoria no
+# viaje con el código.
+gitignore_memsys3: false
+
+# ¿Crear `MEMORY.md` en la raíz como puntero? Ponlo a `true` solo si compruebas
+# que tu harness carga un `MEMORY.md` situado en la raíz del proyecto. El
+# disparador es la ruta que el harness lee, no su marca: Claude Code, por
+# ejemplo, NO la lee, porque su auto-memory vive en
+# `~/.claude/projects/<hash>/memory/`. Si no está comprobado, `false`: un
+# `MEMORY.md` que nadie carga es un archivo inerte en la raíz del proyecto.
+memory_bridge: false
+
+# Opcional — aparecen en el project-status.yaml inicial
+urls:
+  production: ""
+  staging: ""
+  repository: ""
+
+# Opcional — se registran como pendientes iniciales
+# <- PRD §Prioridades / Alta: pasa aquí los items de prioridad alta
+pendientes_iniciales: []
+  # - prioridad: 1
+  #   tarea: "Descripción de la tarea"
+  #   detalle: "Contexto adicional"
